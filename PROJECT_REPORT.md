@@ -3,6 +3,8 @@
 **Assessment date:** 2026-09-28  
 **Repository:** https://github.com/Pankajkumar510/fakeageanalysis
 
+**Live deployment:** https://fakeageanalysis-production.up.railway.app
+
 ## Executive Summary
 
 FakeAgeAnalysis is a prototype video-analysis system with three independent machine-learning capabilities:
