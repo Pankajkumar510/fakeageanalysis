@@ -40,6 +40,12 @@ The current inventory contains 6,106 age training rows, 1,526 age validation row
 py -3 -m pip install -r requirements.txt
 ```
 
+For model evaluation, install the optional evaluation dependency as well:
+
+```powershell
+py -3 -m pip install -r requirements-dev.txt
+```
+
 ## Run The API
 
 ```powershell
