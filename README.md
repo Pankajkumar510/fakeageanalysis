@@ -72,7 +72,16 @@ This writes updated metrics to `models/evaluation_metrics.json`. Always record t
 
 ## Deployment Notes
 
-`vercel.json` is configured for the static frontend. The PyTorch/OpenCV inference API should run as a separate containerized service rather than a Vercel serverless function. The frontend currently expects the API at the same origin, so a production deployment should add a configurable API base URL and restrict CORS to the deployed frontend origin.
+The recommended deployment is Render as one Docker web service. `Dockerfile` installs the CPU PyTorch/OpenCV runtime, copies the models, starts FastAPI, and serves the static frontend from the same origin. `render.yaml` provides the Render blueprint and uses `/api/status` as the health check.
+
+To deploy:
+
+1. Open https://dashboard.render.com/select-repo?type=blueprint.
+2. Connect `Pankajkumar510/fakeageanalysis`.
+3. Select `render.yaml` and create the service.
+4. Wait for the Docker build, then open the generated Render URL.
+
+The free Render tier may sleep when idle and CPU inference may be slow. Use a paid instance for reliable availability and higher upload/inference workloads. `vercel.json` remains available for a frontend-only deployment, but Vercel cannot run this PyTorch/OpenCV backend as a normal serverless function.
 
 ## Production Status
 
