@@ -1,0 +1,11 @@
+torch
+torchvision
+pillow
+scikit-learn
+numpy
+tqdm
+fastapi
+uvicorn
+python-multipart
+opencv-python
+streamlit

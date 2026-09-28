@@ -1,0 +1,18 @@
+{
+  "age": {
+    "samples": 1526,
+    "mae_years": 5.309291070520018,
+    "within_5_years_percent": 14.980014394445599
+  },
+  "deepfake": {
+    "samples": 2000,
+    "accuracy_percent": 89.05,
+    "precision_percent": 91.58679446219382,
+    "recall_percent": 86.0,
+    "f1_percent": 88.7055183084064
+  },
+  "rppg": {
+    "samples": 4,
+    "mae_bpm": 74.65506746247411
+  }
+}

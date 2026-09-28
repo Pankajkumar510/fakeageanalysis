@@ -1,0 +1,15 @@
+.venv/
+.venv313/
+__pycache__/
+*.py[cod]
+temp_uploads/
+.streamlit/
+Data/
+*.MOV
+*.mov
+*.mp4
+*.avi
+*.m4v
+
+# Duplicate/incomplete checkpoint
+models/deepfake_model.interrupted.pth
