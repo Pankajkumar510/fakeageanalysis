@@ -78,16 +78,20 @@ This writes updated metrics to `models/evaluation_metrics.json`. Always record t
 
 ## Deployment Notes
 
-The recommended deployment is Render as one Docker web service. `Dockerfile` installs the CPU PyTorch/OpenCV runtime, copies the models, starts FastAPI, and serves the static frontend from the same origin. `render.yaml` provides the Render blueprint and uses `/api/status` as the health check.
+The live deployment is available at [fakeageanalysis-production.up.railway.app](https://fakeageanalysis-production.up.railway.app). It serves the FastAPI backend, model files, and static frontend from one Railway service.
+
+Health check: [fakeageanalysis-production.up.railway.app/api/status](https://fakeageanalysis-production.up.railway.app/api/status)
+
+The project also includes a Dockerfile and `render.yaml` for Render deployment. `vercel.json` remains available for a frontend-only deployment, but Vercel cannot run this PyTorch/OpenCV backend as a normal serverless function.
 
 To deploy:
 
-1. Open https://dashboard.render.com/select-repo?type=blueprint.
-2. Connect `Pankajkumar510/fakeageanalysis`.
-3. Select `render.yaml` and create the service.
-4. Wait for the Docker build, then open the generated Render URL.
+1. Connect `Pankajkumar510/fakeageanalysis` to Railway.
+2. Use the repository Dockerfile.
+3. Generate a public Railway domain.
+4. Confirm `/api/status` reports all models as `Ready`.
 
-The free Render tier may sleep when idle and CPU inference may be slow. Use a paid instance for reliable availability and higher upload/inference workloads. `vercel.json` remains available for a frontend-only deployment, but Vercel cannot run this PyTorch/OpenCV backend as a normal serverless function.
+CPU inference may be slow and the service can sleep on limited plans. Use a paid instance for reliable availability and higher upload/inference workloads.
 
 ## Production Status
 
