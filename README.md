@@ -6,6 +6,8 @@ FakeAgeAnalysis is a FastAPI-based video analysis prototype with three machine-l
 - **Deepfake detection:** ResNet18 binary classification over sampled video frames.
 - **rPPG heart-rate estimation:** a 1D convolutional model over a normalized green-channel signal.
 
+The project analyzes an uploaded video for suspected fake content, estimates age, and provides a non-diagnostic health analysis from estimated heart rate.
+
 The browser interface is in `frontend/index.html`. The API is in `api.py`; Streamlit is no longer used.
 
 ## Current Results

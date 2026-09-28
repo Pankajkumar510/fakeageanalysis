@@ -11,6 +11,8 @@ FakeAgeAnalysis is a prototype video-analysis system with three independent mach
 2. **Deepfake classification** from sampled video frames using a ResNet18 binary classifier.
 3. **Remote photoplethysmography (rPPG)** heart-rate estimation from a green-channel video signal using a small 1D convolutional regressor.
 
+In practical terms, the project analyzes an uploaded video for whether it appears fake, estimates the subject's age, and provides a non-diagnostic health analysis based on estimated heart rate.
+
 The application exposes a FastAPI service in `api.py` and serves the static frontend from `frontend/index.html`. Training is implemented in `train_age_deepfake.py` and `train_rppg.py`; evaluation is implemented in `evaluate_models.py`.
 
 The project is suitable as an academic or proof-of-concept demonstration. It is not production ready yet. The largest risks are the very small rPPG dataset, weak rPPG validation design, lack of face detection and tracking, frame-level rather than video-level modeling, incomplete robustness testing, and deployment constraints for PyTorch/OpenCV inference.
