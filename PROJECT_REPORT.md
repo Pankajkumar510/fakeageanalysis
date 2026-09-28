@@ -38,6 +38,34 @@ The frontend is a static Vue 3 page loaded from a CDN. The API currently allows 
 - **Shared image preprocessing:** Resize to 224 x 224, convert to tensor, and ImageNet normalization.
 - **Training:** AdamW, ReduceLROnPlateau for age/deepfake, deterministic seeds, and gradient clipping for image models.
 
+## Technologies Used
+
+### Backend and API
+
+- **Python 3.11:** application, training, and evaluation language.
+- **FastAPI:** asynchronous HTTP API and video-upload endpoint.
+- **Uvicorn:** ASGI server used to run the FastAPI application.
+- **Pydantic/FastAPI validation:** request and response handling through FastAPI.
+
+### Machine Learning and data processing
+
+- **PyTorch:** model definition, training, checkpoint loading, and inference.
+- **Torchvision:** ResNet18 architecture, image transforms, and pretrained ImageNet weights.
+- **NumPy:** signal normalization, statistics, and numerical array operations.
+- **Pillow:** image loading and RGB conversion.
+- **OpenCV:** video decoding, frame sampling, region extraction, and green-channel signal extraction.
+- **scikit-learn:** optional evaluation dependency for accuracy, precision, recall, F1, and MAE metrics.
+- **tqdm:** training progress reporting for the rPPG pipeline.
+
+### Frontend and deployment
+
+- **HTML, CSS, and JavaScript:** browser application structure and interactions.
+- **Vue 3 via CDN:** frontend state management and UI behavior.
+- **Tailwind CSS via CDN:** frontend styling and responsive layout utilities.
+- **Docker:** reproducible CPU inference environment with PyTorch and OpenCV system libraries.
+- **Railway:** current public hosting platform for the combined API and frontend service.
+- **GitHub:** source control and deployment source repository.
+
 ## Dataset Inventory
 
 | Task | Training data | Validation data | Test data | Important facts |
