@@ -212,7 +212,8 @@
 
                 // Use ?api=https://api.example.com/api or set window.VIDEO_API_URL for a separate API service.
                 const configuredApiUrl = new URLSearchParams(window.location.search).get('api') || window.VIDEO_API_URL
-                const API_URL = (configuredApiUrl || '/api').replace(/\/$/, '')
+                const isStaticVercelDeployment = window.location.hostname.endsWith('.vercel.app') && !configuredApiUrl
+                const API_URL = isStaticVercelDeployment ? null : (configuredApiUrl || '/api').replace(/\/$/, '')
 
                 const readJsonResponse = async (response) => {
                     const body = await response.text()
@@ -276,6 +277,11 @@
 
                 const analyzeVideo = async () => {
                     if (!videoFile.value) return
+
+                    if (!API_URL) {
+                        error.value = 'This frontend is hosted on Vercel without an inference API. Add ?api=https://your-api-host.com/api to the URL.'
+                        return
+                    }
                     
                     isAnalyzing.value = true
                     error.value = null
