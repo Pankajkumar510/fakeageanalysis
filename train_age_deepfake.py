@@ -46,6 +46,10 @@ def read_rows(csv_path):
         return list(csv.DictReader(file))
 
 
+def read_age_rows(csv_path):
+    return [row for row in read_rows(csv_path) if 0 <= float(row["age"]) <= 100]
+
+
 def seed_everything(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -95,8 +99,8 @@ def evaluate_age(model, loader):
 
 
 def train_age(epochs, pretrained):
-    train_rows = read_rows(ROOT / "Data/train.csv")
-    validation_rows = read_rows(ROOT / "Data/val.csv")
+    train_rows = read_age_rows(ROOT / "Data/train.csv")
+    validation_rows = read_age_rows(ROOT / "Data/val.csv")
     train_dataset = CsvImageDataset(train_rows, build_transforms(True), "age")
     validation_dataset = CsvImageDataset(validation_rows, build_transforms(False), "age")
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
@@ -199,7 +203,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", choices=["age", "deepfake", "both"], default="both")
     parser.add_argument("--epochs", type=int, default=12)
-    parser.add_argument("--pretrained", action="store_true")
+    pretrained_group = parser.add_mutually_exclusive_group()
+    pretrained_group.add_argument("--pretrained", dest="pretrained", action="store_true", default=True)
+    pretrained_group.add_argument("--no-pretrained", dest="pretrained", action="store_false")
     parser.add_argument("--seed", type=int, default=42)
     arguments = parser.parse_args()
     seed_everything(arguments.seed)

@@ -162,6 +162,15 @@ def extract_green_signal(video_path):
     return signal if standard_deviation < 1e-6 else (signal - np.mean(signal)) / standard_deviation
 
 
+def find_bvp_path(video_path):
+    sensor_root = video_path.parent.parent
+    for folder_name in ("empatica_e4", "empatica_data"):
+        candidate = sensor_root / folder_name / "BVP.csv"
+        if candidate.exists():
+            return candidate
+    return None
+
+
 def evaluate_rppg():
     model = load_rppg_model()
     records = []
@@ -169,19 +178,20 @@ def evaluate_rppg():
     video_files += sorted((ROOT / "Data/rPPZ").glob("**/video/*.mov"))
     video_files += sorted((ROOT / "Data/rPPZ").glob("**/video/*.mp4"))
     for video_path in video_files:
-        bvp_path = video_path.parent.parent / "empatica_e4" / "BVP.csv"
+        bvp_path = find_bvp_path(video_path)
         signal = extract_green_signal(video_path)
-        if not bvp_path.exists() or signal is None:
+        if bvp_path is None or signal is None:
             continue
         bvp, sample_rate = load_bvp_signal(bvp_path)
         if len(bvp) < 64:
             continue
+        bvp_window_length = max(16, round(64 * len(bvp) / max(len(signal), 1)))
         signal = signal[-64:]
         if len(signal) < 64:
             padded = np.zeros(64, dtype=np.float32)
             padded[: len(signal)] = signal
             signal = padded
-        target = compute_heart_rate(bvp[-64:], sample_rate)
+        target = compute_heart_rate(bvp[-bvp_window_length:], sample_rate)
         if 40 <= target <= 180:
             records.append((signal, target))
 

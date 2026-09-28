@@ -153,13 +153,22 @@ def extract_face_signal(video_path: Path):
     return signal
 
 
+def find_bvp_path(video_path: Path):
+    sensor_root = video_path.parent.parent
+    for folder_name in ("empatica_e4", "empatica_data"):
+        candidate = sensor_root / folder_name / "BVP.csv"
+        if candidate.exists():
+            return candidate
+    return None
+
+
 def build_dataset():
     records = []
     video_files = sorted(DATA_DIR.glob("**/video/*.MOV")) + sorted(DATA_DIR.glob("**/video/*.mov")) + sorted(DATA_DIR.glob("**/video/*.mp4"))
 
     for video_path in video_files:
-        bvp_path = video_path.parent.parent / "empatica_e4" / "BVP.csv"
-        if not bvp_path.exists():
+        bvp_path = find_bvp_path(video_path)
+        if bvp_path is None:
             continue
 
         green_signal = extract_face_signal(video_path)
@@ -177,9 +186,9 @@ def build_dataset():
                 continue
 
             # Align the BVP-derived heart-rate estimate to the same time span as the sampled video window.
-            signal_ratio = len(green_signal) / max(len(bvp_signal), 1)
             bvp_start = int(start / max(len(green_signal), 1) * len(bvp_signal))
-            bvp_end = min(len(bvp_signal), bvp_start + WINDOW_LENGTH)
+            bvp_window_length = max(16, round(WINDOW_LENGTH * len(bvp_signal) / len(green_signal)))
+            bvp_end = min(len(bvp_signal), bvp_start + bvp_window_length)
             if bvp_end - bvp_start < 16:
                 continue
             bvp_segment = bvp_signal[bvp_start:bvp_end]
