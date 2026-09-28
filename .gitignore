@@ -3,7 +3,6 @@
 __pycache__/
 *.py[cod]
 temp_uploads/
-.streamlit/
 Data/
 *.MOV
 *.mov
