@@ -210,8 +210,23 @@
                 const results = ref(null)
                 const error = ref(null)
 
-                // The FastAPI server URL
-                const API_URL = '/api'
+                // Use ?api=https://api.example.com/api or set window.VIDEO_API_URL for a separate API service.
+                const configuredApiUrl = new URLSearchParams(window.location.search).get('api') || window.VIDEO_API_URL
+                const API_URL = (configuredApiUrl || '/api').replace(/\/$/, '')
+
+                const readJsonResponse = async (response) => {
+                    const body = await response.text()
+                    if (!body.trim()) return null
+                    try {
+                        return JSON.parse(body)
+                    } catch {
+                        return {
+                            detail: response.headers.get('content-type')?.includes('text/html')
+                                ? 'The API returned a web page instead of JSON. Configure the deployed FastAPI URL.'
+                                : 'The API returned an invalid response.'
+                        }
+                    }
+                }
 
                 const handleFileSelect = (event) => {
                     const file = event.target.files[0]
@@ -276,11 +291,14 @@
                         })
                         
                         if (!res.ok) {
-                            const errData = await res.json()
-                            throw new Error(errData.detail || 'Analysis failed')
+                            const errData = await readJsonResponse(res)
+                            throw new Error(errData?.detail || 'Analysis failed')
                         }
 
-                        const data = await res.json()
+                        const data = await readJsonResponse(res)
+                        if (!data?.results) {
+                            throw new Error(data?.detail || 'The API returned no analysis results.')
+                        }
                         results.value = data.results
                     } catch (e) {
                         error.value = e.message || 'An error occurred during analysis.'
